@@ -92,6 +92,69 @@ npm run preview
 - **Real-time Preview**: All effects are applied in real-time during playback
 - **BPM Adjustment**: Click the Speed button to auto-detect BPM and adjust tempo without pitch changes
 
+## ⚙️ Configuration
+
+### Disabling Features
+
+You can customize which features are available in the audio editor by using the `disabledFeatures` prop. This is useful for simplifying the interface or restricting certain capabilities.
+
+**Available feature keys:**
+- `'volume'` - Volume controls
+- `'speed'` - BPM detection and tempo adjustment
+- `'bitrate'` - Bitrate selection for export
+- `'equalizer'` - 10-band equalizer
+
+**Example usage in App.vue:**
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import AudioWelcome from "./components/audio/AudioWelcome.vue";
+
+const rawAudio = ref<File | null>(null);
+const rawAudioDuration = ref(0);
+
+// Disable BPM and Equalizer features
+const disabledFeatures = ref(['speed', 'equalizer']);
+
+function close() {
+  rawAudio.value = null;
+  rawAudioDuration.value = 0;
+}
+</script>
+
+<template>
+  <div class="min-h-screen bg-gray-900 text-white overflow-x-hidden">
+    <AudioWelcome
+      :raw-audio="rawAudio"
+      :raw-audio-duration="rawAudioDuration"
+      :disabled-features="disabledFeatures"
+      @set-audio="rawAudio = $event"
+      @set-audio-duration="rawAudioDuration = $event"
+      @close="close"
+    />
+  </div>
+</template>
+```
+
+**More examples:**
+
+```typescript
+// Disable all effects except volume
+const disabledFeatures = ref(['speed', 'bitrate', 'equalizer']);
+
+// Disable only bitrate selection
+const disabledFeatures = ref(['bitrate']);
+
+// Enable all features (default)
+const disabledFeatures = ref([]);
+```
+
+When a feature is disabled:
+- Its button is hidden from the header toolbar
+- The corresponding effects panel section is not accessible
+- All other features continue to work normally
+
 ## 🛠️ Development
 
 Built with Vue 3 Composition API and TypeScript using a modular composables architecture. The codebase is organized into reusable components and composables that handle specific audio editing functionality.

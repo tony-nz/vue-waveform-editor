@@ -117,6 +117,7 @@
           <AudioEditor
             :raw-audio="props.rawAudio"
             :raw-audio-duration="props.rawAudioDuration"
+            :disabled-features="props.disabledFeatures"
             @close="$emit('close')"
           />
         </div>
@@ -314,10 +315,12 @@ const props = withDefaults(
   defineProps<{
     rawAudio?: File | null;
     rawAudioDuration?: number;
+    disabledFeatures?: string[];
   }>(),
   {
     rawAudio: null,
     rawAudioDuration: 0,
+    disabledFeatures: () => [],
   }
 );
 

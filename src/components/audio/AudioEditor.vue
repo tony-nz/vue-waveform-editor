@@ -62,6 +62,7 @@
           :music-info="musicInfo"
           :bitrate="bitrate"
           :equalizer="equalizer"
+          :disabled-features="disabledFeatures"
           @update-volume="handleVolumeUpdate"
           @update-exported-volume="(v: any) => (exportedVolume = v)"
           @update-speed="(value: number) => setSpeed(wavesurfer, value)"
@@ -106,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount, computed } from "vue";
 import { useWaveSurfer } from "../../composables/audio/useWaveSurfer";
 import { useAudioEffects } from "../../composables/audio/useAudioEffects";
 import { useHybridExport } from "../../composables/audio/useHybridExport";
@@ -127,6 +128,7 @@ import FadeOverlay from "../common/FadeOverlay.vue";
 interface Props {
   rawAudio: File;
   rawAudioDuration: number;
+  disabledFeatures?: string[];
 }
 
 const props = defineProps<Props>();
@@ -196,12 +198,17 @@ const {
 } = useAudioEffects();
 
 // Actions and selections
-const actions = [
+const allActions = [
   { tooltip: "Volume", key: "volume", icon: "volume-up" },
   { tooltip: "Speed", key: "speed", icon: "tachometer-alt" },
   { tooltip: "Bitrate", key: "bitrate", icon: "wave-square" },
   { tooltip: "Equalizer", key: "equalizer", icon: "sliders-h" },
 ];
+
+// Filter actions based on disabledFeatures prop
+const actions = computed(() => {
+  return allActions.filter(action => !props.disabledFeatures?.includes(action.key));
+});
 
 const selectedAction = ref("");
 const editableTitle = ref("");

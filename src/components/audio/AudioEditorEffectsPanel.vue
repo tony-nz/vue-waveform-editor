@@ -100,6 +100,7 @@ defineProps<{
   musicInfo: MusicInfo | null;
   bitrate: number;
   equalizer: EqItem[];
+  disabledFeatures?: string[];
 }>();
 
 defineEmits<{

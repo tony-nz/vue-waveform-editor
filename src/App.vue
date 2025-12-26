@@ -5,6 +5,11 @@ import AudioWelcome from "./components/audio/AudioWelcome.vue";
 const rawAudio = ref<File | null>(null);
 const rawAudioDuration = ref(0);
 
+// Example: Disable features by passing an array of feature keys
+// Available keys: 'volume', 'speed', 'bitrate', 'equalizer'
+// const disabledFeatures = ref(['speed', 'equalizer']); // Example: disable BPM and Equalizer
+const disabledFeatures = ref<string[]>([]); // Empty array means all features enabled
+
 function close() {
   rawAudio.value = null;
   rawAudioDuration.value = 0;
@@ -16,6 +21,7 @@ function close() {
     <AudioWelcome
       :raw-audio="rawAudio"
       :raw-audio-duration="rawAudioDuration"
+      :disabled-features="disabledFeatures"
       @set-audio="rawAudio = $event"
       @set-audio-duration="rawAudioDuration = $event"
       @close="close"
